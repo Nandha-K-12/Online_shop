@@ -1,0 +1,18 @@
+{% extends "shop/base.html" %}
+
+{% block title %}
+  Order Created
+{% endblock %}
+
+{% block content %}
+  <div class="order-success-card">
+    <div class="success-icon">🎉</div>
+    <h1>Thank you for your order!</h1>
+    <p>Your order has been successfully placed and is now being processed.</p>
+    <div class="order-number-box">
+      <span>Your Order Number</span>
+      <strong>#{{ order.id }}</strong>
+    </div>
+    <a href="{% url "shop:product_list" %}" class="btn-primary">Continue Shopping</a>
+  </div>
+{% endblock %}
