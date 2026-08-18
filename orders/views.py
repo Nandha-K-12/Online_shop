@@ -3,6 +3,7 @@ from django.shortcuts import render
 from cart.cart import Cart
 from .forms import OrderCreateForm
 from .models import OrderItem
+from .tasks import order_created
 
 
 def order_create(request):
@@ -24,6 +25,8 @@ def order_create(request):
 
             # Clear the cart after creating the order
             cart.clear()
+            # Launch asynchronous task
+            order_created.delay(order.id)
 
             return render(
                 request,
