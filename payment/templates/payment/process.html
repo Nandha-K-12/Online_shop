@@ -1,0 +1,523 @@
+{% extends "shop/base.html" %}
+
+{% block title %}
+Pay with Credit Card
+{% endblock %}
+
+{% block content %}
+<style>
+  /* Reset flex layout from parent #content for payment page */
+  #content {
+    display: block !important;
+    max-width: 900px !important;
+    margin: 2rem auto !important;
+    padding: 0 1rem !important;
+  }
+
+  .payment-page-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 1rem 0;
+  }
+
+  .payment-box {
+    background: #ffffff;
+    width: 100%;
+    max-width: 520px;
+    border-radius: 20px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+    padding: 2.25rem;
+    box-sizing: border-box;
+  }
+
+  .payment-header {
+    text-align: center;
+    margin-bottom: 1.75rem;
+  }
+
+  .payment-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    background: #ecfdf5;
+    color: #059669;
+    padding: 0.35rem 0.85rem;
+    border-radius: 9999px;
+    margin-bottom: 0.75rem;
+  }
+
+  .payment-header h1 {
+    font-size: 1.75rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #0f172a;
+    margin: 0 0 0.4rem 0;
+  }
+
+  .payment-header p {
+    color: #64748b;
+    font-size: 0.9rem;
+    margin: 0;
+  }
+
+  .order-total-pill {
+    margin-top: 0.75rem;
+    display: inline-block;
+    background: #eef2ff;
+    color: #4f46e5;
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding: 0.4rem 1rem;
+    border-radius: 9999px;
+    border: 1px solid #c7d2fe;
+  }
+
+  /* Credit Card Graphic */
+  .credit-card-ui {
+    background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4338ca 100%);
+    border-radius: 16px;
+    padding: 1.5rem;
+    color: #ffffff;
+    margin: 1.5rem 0 1.75rem;
+    box-shadow: 0 10px 20px -5px rgba(49, 46, 129, 0.35);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .credit-card-ui::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .card-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+  }
+
+  .card-chip-graphic {
+    width: 38px;
+    height: 26px;
+    background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+    border-radius: 5px;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.15);
+  }
+
+  .card-brand-tag {
+    font-size: 0.85rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    color: #ffffff;
+    opacity: 0.9;
+  }
+
+  .card-number-dots {
+    font-family: 'Courier New', monospace, monospace;
+    font-size: 1.2rem;
+    letter-spacing: 0.14em;
+    margin-bottom: 1.25rem;
+    color: #f8fafc;
+  }
+
+  .card-bottom-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    opacity: 0.85;
+  }
+
+  .card-bottom-row strong {
+    display: block;
+    font-size: 0.85rem;
+    color: #ffffff;
+    margin-top: 0.15rem;
+  }
+
+  /* Form and Inputs */
+  .field-box {
+    margin-bottom: 1.25rem;
+  }
+
+  .field-box label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #334155;
+    margin-bottom: 0.45rem;
+  }
+
+  .hosted-field-input {
+    height: 48px;
+    background-color: #f8fafc;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 10px;
+    padding: 0 1rem;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+  }
+
+  .hosted-field-input.braintree-hosted-fields-focused {
+    border-color: #4f46e5 !important;
+    background-color: #ffffff !important;
+    box-shadow: 0 0 0 3px #eef2ff !important;
+  }
+
+  .hosted-field-input.braintree-hosted-fields-invalid {
+    border-color: #ef4444 !important;
+    background-color: #fef2f2 !important;
+  }
+
+  .hosted-field-input.braintree-hosted-fields-valid {
+    border-color: #10b981 !important;
+  }
+
+  .field-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  /* Submit Button */
+  .pay-btn-submit {
+    width: 100%;
+    padding: 0.95rem;
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    color: #ffffff;
+    font-size: 1.05rem;
+    font-weight: 700;
+    font-family: inherit;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
+    transition: all 0.2s ease;
+    margin-top: 0.5rem;
+  }
+
+  .pay-btn-submit:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(79, 70, 229, 0.45);
+  }
+
+  .pay-btn-submit:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  /* Message alerts */
+  .msg-banner {
+    margin-top: 1.25rem;
+    padding: 0.85rem 1rem;
+    border-radius: 10px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .msg-banner.error {
+    display: flex;
+    background-color: #fef2f2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+  }
+
+  .msg-banner.success {
+    display: flex;
+    background-color: #ecfdf5;
+    color: #047857;
+    border: 1px solid #a7f3d0;
+  }
+
+  .msg-banner.info {
+    display: flex;
+    background-color: #eef2ff;
+    color: #4338ca;
+    border: 1px solid #c7d2fe;
+  }
+
+  .security-footer {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.8rem;
+    color: #94a3b8;
+  }
+</style>
+
+<div class="payment-page-wrapper">
+  <div class="payment-box">
+    
+    <div class="payment-header">
+      <span class="payment-badge">🔒 256-Bit SSL Encrypted</span>
+      <h1>Pay for your order</h1>
+      <p>Enter your payment details below to complete your order.</p>
+      {% if order %}
+        <div class="order-total-pill">
+          Amount to Pay: <strong>${{ order.get_total_cost }}</strong>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Credit Card Preview -->
+    <div class="credit-card-ui">
+      <div class="card-top-row">
+        <div class="card-chip-graphic"></div>
+        <div class="card-brand-tag" id="card-brand-tag">CARD</div>
+      </div>
+      <div class="card-number-dots" id="card-number-dots">•••• •••• •••• ••••</div>
+      <div class="card-bottom-row">
+        <div>
+          <span>CARD HOLDER</span>
+          <strong>{% if order %}{{ order.first_name }} {{ order.last_name }}{% else %}CUSTOMER{% endif %}</strong>
+        </div>
+        <div>
+          <span>EXPIRES</span>
+          <strong>MM/YY</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment Form -->
+    <form id="payment-form">
+      {% csrf_token %}
+
+      <div class="field-box">
+        <label for="card-number">Card Number</label>
+        <div id="card-number" class="hosted-field-input"></div>
+      </div>
+
+      <div class="field-split">
+        <div class="field-box">
+          <label for="expiration-date">Expiration Date</label>
+          <div id="expiration-date" class="hosted-field-input"></div>
+        </div>
+
+        <div class="field-box">
+          <label for="cvv">CVV / Security Code</label>
+          <div id="cvv" class="hosted-field-input"></div>
+        </div>
+      </div>
+
+      <button type="submit" id="submit-button" class="pay-btn-submit" disabled>
+        <span id="button-icon">🔒</span>
+        <span id="button-text">Initializing Gateway...</span>
+      </button>
+    </form>
+
+    <div id="payment-message" class="msg-banner"></div>
+
+    <div class="security-footer">
+      🛡️ Powered by Braintree & PayPal • Bank-grade Security
+    </div>
+
+  </div>
+</div>
+
+<!-- Braintree JS SDK Components -->
+<script src="https://js.braintreegateway.com/web/3.144.0/js/client.min.js"></script>
+<script src="https://js.braintreegateway.com/web/3.144.0/js/hosted-fields.min.js"></script>
+
+<script>
+  (function () {
+    const clientToken = '{{ client_token|default_if_none:"" }}';
+    const form = document.querySelector('#payment-form');
+    const submitBtn = document.querySelector('#submit-button');
+    const btnText = document.querySelector('#button-text');
+    const btnIcon = document.querySelector('#button-icon');
+    const messageEl = document.querySelector('#payment-message');
+    const brandTag = document.querySelector('#card-brand-tag');
+
+    function showMessage(text, type = 'info') {
+      messageEl.textContent = text;
+      messageEl.className = 'msg-banner ' + type;
+    }
+
+    function clearMessage() {
+      messageEl.textContent = '';
+      messageEl.className = 'msg-banner';
+    }
+
+    console.log('[Braintree] Initializing client. Token present:', !!clientToken);
+
+    if (!clientToken) {
+      console.error('[Braintree] No client token provided by the server.');
+      showMessage('Payment gateway initialization failed. Missing client token.', 'error');
+      btnText.textContent = 'Gateway Error';
+      return;
+    }
+
+    if (typeof braintree === 'undefined') {
+      console.error('[Braintree] SDK failed to load from CDN.');
+      showMessage('Failed to load secure payment scripts. Please check your network connection.', 'error');
+      return;
+    }
+
+    // Step 1: Create Braintree Client
+    braintree.client.create({
+      authorization: clientToken
+    }, function (clientErr, clientInstance) {
+      if (clientErr) {
+        console.error('[Braintree] Client error:', clientErr);
+        showMessage('Error connecting to payment provider: ' + clientErr.message, 'error');
+        btnText.textContent = 'Connection Error';
+        return;
+      }
+
+      console.log('[Braintree] Client instance created successfully.');
+
+      // Step 2: Create Hosted Fields with custom styling
+      braintree.hostedFields.create({
+        client: clientInstance,
+        styles: {
+          'input': {
+            'font-size': '15px',
+            'font-family': "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+            'font-weight': '500',
+            'color': '#0f172a'
+          },
+          '::placeholder': {
+            'color': '#94a3b8'
+          },
+          ':focus': {
+            'color': '#0f172a'
+          },
+          '.valid': {
+            'color': '#10b981'
+          },
+          '.invalid': {
+            'color': '#ef4444'
+          }
+        },
+        fields: {
+          number: {
+            selector: '#card-number',
+            placeholder: '4111 1111 1111 1111'
+          },
+          expirationDate: {
+            selector: '#expiration-date',
+            placeholder: 'MM / YY'
+          },
+          cvv: {
+            selector: '#cvv',
+            placeholder: '123'
+          }
+        }
+      }, function (hostedFieldsErr, hostedFieldsInstance) {
+        if (hostedFieldsErr) {
+          console.error('[Braintree] Hosted Fields creation error:', hostedFieldsErr);
+          showMessage('Failed to load payment fields: ' + hostedFieldsErr.message, 'error');
+          btnText.textContent = 'Fields Error';
+          return;
+        }
+
+        console.log('[Braintree] Hosted Fields ready for input.');
+        submitBtn.disabled = false;
+        btnText.textContent = 'Pay Now';
+        btnIcon.textContent = '🔒';
+
+        // Card Brand Detection (Visa, Mastercard, Amex, etc.)
+        hostedFieldsInstance.on('cardTypeChange', function (event) {
+          if (event.cards.length === 1) {
+            brandTag.textContent = event.cards[0].niceType.toUpperCase();
+            console.log('[Braintree] Card type identified:', event.cards[0].niceType);
+          } else {
+            brandTag.textContent = 'CARD';
+          }
+        });
+
+        // Step 3: Handle Form Submission & Tokenization
+        form.addEventListener('submit', function (event) {
+          event.preventDefault();
+          clearMessage();
+
+          submitBtn.disabled = true;
+          btnText.textContent = 'Processing Payment...';
+          btnIcon.textContent = '⏳';
+          console.log('[Braintree] Tokenizing card...');
+
+          hostedFieldsInstance.tokenize(function (tokenizeErr, payload) {
+            if (tokenizeErr) {
+              console.error('Tokenization error:', tokenizeErr);
+              submitBtn.disabled = false;
+              btnText.textContent = 'Pay Now';
+              btnIcon.textContent = '🔒';
+              showMessage('Payment details are invalid.', 'error');
+              return;
+            }
+
+            console.log('Payment nonce:', payload.nonce);
+
+            // Send nonce to Django
+            fetch('{% url "payment:payment_create" %}', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': '{{ csrf_token }}'
+              },
+              body: new URLSearchParams({
+                'payment_method_nonce': payload.nonce
+              })
+            })
+            .then(response => response.json())
+            .then(data => {
+              console.log('Payment response:', data);
+
+              if (data.success) {
+                showMessage('Payment successful! Redirecting to confirmation...', 'success');
+                console.log('Transaction ID:', data.transaction_id);
+                console.log('Transaction status:', data.status);
+                btnText.textContent = 'Payment Completed';
+                btnIcon.textContent = '✅';
+
+                setTimeout(function() {
+                  window.location.href = '{% url "payment:done" %}';
+                }, 1200);
+              } else {
+                submitBtn.disabled = false;
+                btnText.textContent = 'Pay Now';
+                btnIcon.textContent = '🔒';
+                showMessage('Payment failed: ' + data.error, 'error');
+                console.error('Payment failed:', data.error);
+              }
+            })
+            .catch(error => {
+              console.error('Payment request failed:', error);
+              submitBtn.disabled = false;
+              btnText.textContent = 'Pay Now';
+              btnIcon.textContent = '🔒';
+              showMessage('Something went wrong while processing payment.', 'error');
+            });
+          });
+        });
+      });
+    });
+  })();
+</script>
+{% endblock %}
