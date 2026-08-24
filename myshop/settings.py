@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'parler',
+    'rosetta',
+    'localflavor',
 
 
     'shop.apps.ShopConfig',
@@ -122,6 +125,18 @@ LANGUAGES = [
     ('es', _('Spanish')),
     ('ta', _('Tamil')),
 ]
+PARLER_LANGUAGES = {
+    None: (
+        {'code': 'en'},
+        {'code': 'es'},
+        {'code': 'ta'},
+    ),
+    'default': {
+        'fallback': 'en',
+        'hide_untranslated': False,
+    }
+}
+
 
 LOCALE_PATHS = [
     BASE_DIR / 'locale',
@@ -150,4 +165,9 @@ BRAINTREE_PUBLIC_KEY = os.getenv('BRAINTREE_PUBLIC_KEY')
 BRAINTREE_PRIVATE_KEY = os.getenv('BRAINTREE_PRIVATE_KEY')
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# Redis settings
+REDIS_HOST = 'localhost'
+REDIS_PORT = 6379
+REDIS_DB = 1
 

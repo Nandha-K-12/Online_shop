@@ -8,6 +8,11 @@ app_name = 'payment'
 
 urlpatterns = [
     path(
+        'process/',
+        views.payment_process,
+        name='process',
+    ),
+    path(
         '',
         views.payment_process,
         name='payment_process',

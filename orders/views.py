@@ -7,6 +7,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 
 from cart.cart import Cart
+from shop.recommender import Recommender
 from .forms import OrderCreateForm
 from .models import Order, OrderItem
 from .tasks import order_created
@@ -25,6 +26,7 @@ def order_create(request):
                 order.discount = cart.coupon.discount
             order.save()
 
+            order_products = []
             for item in cart:
                 OrderItem.objects.create(
                     order=order,
@@ -32,9 +34,13 @@ def order_create(request):
                     price=item['price'],
                     quantity=item['quantity']
                 )
+                order_products.append(item['product'])
 
             # Clear the cart after creating the order
             cart.clear()
+            # Track purchased products for recommendations
+            r = Recommender()
+            r.products_bought(order_products)
             # Launch asynchronous task
             order_created.delay(order.id)
             # Set the order in the session

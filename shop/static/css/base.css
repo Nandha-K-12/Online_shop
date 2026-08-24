@@ -390,6 +390,161 @@ img {
   line-height: 1.75;
 }
 
+.product-detail-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+/* ==========================================================================
+   Product Recommendations (Redis)
+   ========================================================================== */
+.recommendations {
+  background: var(--bg-card);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-color);
+  padding: 1.5rem 1.75rem;
+  box-shadow: var(--shadow-sm);
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 2rem;
+}
+
+.recommendations.cart {
+  margin-top: 2.5rem;
+  border-top: 2px solid var(--border-color);
+}
+
+.recommendations h3 {
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-main);
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.recommendations h3::before {
+  content: "✨";
+  font-size: 1.1rem;
+}
+
+.recommendations-grid,
+.recommendations > div:not(h3),
+.recommendations .items-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  align-items: stretch;
+}
+
+.recommendations-grid .item,
+.recommendations .item,
+.recommendations > .item {
+  background: var(--bg-body);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  padding: 0.875rem;
+  width: 140px;
+  min-width: 140px;
+  max-width: 160px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: var(--transition);
+  box-shadow: var(--shadow-sm);
+  box-sizing: border-box;
+}
+
+.recommendations-grid .item:hover,
+.recommendations .item:hover,
+.recommendations > .item:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-focus);
+}
+
+.recommendations-grid .item a,
+.recommendations .item a,
+.recommendations > .item a {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+/* Match recommendation image size to cart image (72px x 72px) */
+.recommendations img,
+.recommendations-grid .item img,
+.recommendations .item img,
+.recommendations > .item img {
+  width: 72px !important;
+  height: 72px !important;
+  min-width: 72px !important;
+  min-height: 72px !important;
+  max-width: 72px !important;
+  max-height: 72px !important;
+  object-fit: cover !important;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-alt);
+  margin-bottom: 0.5rem;
+  transition: transform 0.2s ease;
+  box-sizing: border-box;
+}
+
+.recommendations-grid .item:hover img,
+.recommendations .item:hover img {
+  transform: scale(1.05);
+}
+
+.recommendations-grid .item p,
+.recommendations .item p,
+.recommendations > .item p {
+  margin: 0.25rem 0;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--text-main);
+  line-height: 1.25;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.recommendations-grid .item p a,
+.recommendations .item p a,
+.recommendations > .item p a {
+  color: var(--text-main);
+  text-decoration: none;
+}
+
+.recommendations-grid .item:hover p a,
+.recommendations .item:hover p a {
+  color: var(--primary);
+}
+
+.recommendations-grid .item .price,
+.recommendations .item .price,
+.recommendations > .item .price {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-top: auto;
+  padding: 0.15rem 0.5rem;
+  background: var(--primary-light);
+  border-radius: var(--radius-full);
+  display: inline-block;
+}
+
 /* Buttons */
 .button, .btn-primary {
   display: inline-flex;

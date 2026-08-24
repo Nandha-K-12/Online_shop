@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-24 14:30+0530\n"
+"POT-Creation-Date: 2026-08-24 15:21+0530\n"
 "PO-Revision-Date: 2026-08-24 14:31+0530\n"
 "Last-Translator: Antigravity\n"
 "Language-Team: Tamil\n"
@@ -32,8 +32,14 @@ msgid_plural ""
 "\n"
 "          %(count)s items\n"
 "        "
-msgstr[0] "\n          %(count)s உருப்படி\n        "
-msgstr[1] "\n          %(count)s உருப்படிகள்\n        "
+msgstr[0] ""
+"\n"
+"          %(count)s உருப்படி\n"
+"        "
+msgstr[1] ""
+"\n"
+"          %(count)s உருப்படிகள்\n"
+"        "
 
 #: .\cart\templates\cart\detail.html:31
 msgid "Image"
@@ -110,15 +116,15 @@ msgstr "உங்கள் கூடையில் இதுவரை எந்
 msgid "Browse Catalog"
 msgstr "பொருட்களை உலாவுக"
 
-#: .\myshop\settings.py:121
+#: .\myshop\settings.py:123
 msgid "English"
 msgstr "ஆங்கிலம்"
 
-#: .\myshop\settings.py:122
+#: .\myshop\settings.py:124
 msgid "Spanish"
 msgstr "ஸ்பானிஷ்"
 
-#: .\myshop\settings.py:123
+#: .\myshop\settings.py:125
 msgid "Tamil"
 msgstr "தமிழ்"
 
@@ -201,8 +207,8 @@ msgid ""
 "Thank you for your order! Your payment has been processed successfully and "
 "your items will be prepared for dispatch."
 msgstr ""
-"உங்கள் ஆர்டருக்கு நன்றி! உங்கள் கட்டணம் வெற்றிகரமாக செலுத்தப்பட்டது, "
-"பொருட்கள் அனுப்ப தயாராகிறது."
+"உங்கள் ஆர்டருக்கு நன்றி! உங்கள் கட்டணம் வெற்றிகரமாக செலுத்தப்பட்டது, பொருட்கள் அனுப்ப "
+"தயாராகிறது."
 
 #: .\shop\templates\shop\base.html:40
 msgid "Change"
@@ -212,9 +218,13 @@ msgstr "மாற்று"
 msgid "Your cart is empty."
 msgstr "உங்கள் கூடை காலியாக உள்ளது."
 
-#: .\shop\templates\shop\product\detail.html:22
+#: .\shop\templates\shop\product\detail.html:23
 msgid "Add to cart"
 msgstr "கூடையில் சேர்"
+
+#: .\shop\templates\shop\product\detail.html:33
+msgid "People who bought this also bought"
+msgstr "இதை வாங்கியவர்கள் இதையும் வாங்கியுள்ளனர்"
 
 #: .\shop\templates\shop\product\list.html:5
 #: .\shop\templates\shop\product\list.html:23

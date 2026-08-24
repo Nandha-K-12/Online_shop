@@ -108,7 +108,7 @@
   <h1>{% trans "Your payment was not processed" %}</h1>
   <p>{% trans "There was a problem processing your payment. Your card was not charged. Please try again or return to the shop." %}</p>
   <div class="status-actions">
-    <a href="{% url "payment:payment_process" %}" class="btn-retry">
+    <a href="{% url "payment:process" %}" class="btn-retry">
       🔄 {% trans "Try Again" %}
     </a>
     <a href="{% url "shop:product_list" %}" class="btn-shop">
