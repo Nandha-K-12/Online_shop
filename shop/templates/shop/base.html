@@ -1,4 +1,4 @@
-{% load static %}
+{% load static i18n %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,6 +14,32 @@
   <div id="header">
     <a href="/" class="logo">🛍️ My shop</a>
     <div id="subheader">
+      <div class="languages">
+        <form action="{% url 'set_language' %}" method="post" class="lang-form">
+          {% csrf_token %}
+          <input
+            name="next"
+            type="hidden"
+            value="{{ redirect_to }}"
+          >
+          <select name="language" onchange="this.form.submit()">
+            {% get_current_language as CURRENT_LANGUAGE %}
+            {% get_available_languages as LANGUAGES %}
+            {% get_language_info_list for LANGUAGES as languages %}
+            {% for language in languages %}
+              <option
+                value="{{ language.code }}"
+                {% if language.code == CURRENT_LANGUAGE %}
+                  selected
+                {% endif %}
+              >
+                {{ language.name_local }}
+              </option>
+            {% endfor %}
+          </select>
+          <input type="submit" value="{% trans "Change" %}" class="btn-lang">
+        </form>
+      </div>
       <div class="cart">
         {% with total_items=cart|length %}
           {% if total_items > 0 %}
@@ -22,7 +48,7 @@
             </a>
           {% else %}
             <a href="{% url "cart:cart_detail" %}" class="cart-link">
-              🛒 Your cart is empty.
+              🛒 {% trans "Your cart is empty." %}
             </a>
           {% endif %}
         {% endwith %}

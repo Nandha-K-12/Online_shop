@@ -1,7 +1,8 @@
 {% extends "shop/base.html" %}
+{% load static i18n %}
 
 {% block title %}
-Payment Canceled
+  {% trans "Payment Canceled" %}
 {% endblock %}
 
 {% block content %}
@@ -104,14 +105,14 @@ Payment Canceled
 
 <div class="status-card">
   <div class="status-icon-circle-danger">❌</div>
-  <h1>Your payment was not processed</h1>
-  <p>There was a problem processing your payment. Your card was not charged. Please try again or return to the shop.</p>
+  <h1>{% trans "Your payment was not processed" %}</h1>
+  <p>{% trans "There was a problem processing your payment. Your card was not charged. Please try again or return to the shop." %}</p>
   <div class="status-actions">
     <a href="{% url "payment:payment_process" %}" class="btn-retry">
-      🔄 Try Again
+      🔄 {% trans "Try Again" %}
     </a>
     <a href="{% url "shop:product_list" %}" class="btn-shop">
-      🛍️ Return to Shop
+      🛍️ {% trans "Return to Shop" %}
     </a>
   </div>
 </div>

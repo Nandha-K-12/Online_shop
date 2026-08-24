@@ -3,9 +3,11 @@ from decimal import Decimal
 from django.conf import settings
 
 from shop.models import Product
+from coupons.models import Coupon
 
 
 class Cart:
+
     def __init__(self, request):
         """
         Initialize the cart.
@@ -18,6 +20,9 @@ class Cart:
             cart = self.session[settings.CART_SESSION_ID] = {}
 
         self.cart = cart
+
+        # Get applied coupon ID from session
+        self.coupon_id = self.session.get('coupon_id')
 
     def add(self, product, quantity=1, override_quantity=False):
         """
@@ -52,6 +57,7 @@ class Cart:
 
         if product_id in self.cart:
             del self.cart[product_id]
+
             self.save()
 
     def __iter__(self):
@@ -71,7 +77,9 @@ class Cart:
             cart[str(product.id)]['product'] = product
 
         for item in cart.values():
+
             item['price'] = Decimal(item['price'])
+
             item['total_price'] = (
                 item['price'] * item['quantity']
             )
@@ -96,9 +104,47 @@ class Cart:
             for item in self.cart.values()
         )
 
+    @property
+    def coupon(self):
+        """
+        Return the applied coupon.
+        """
+        if self.coupon_id:
+            try:
+                return Coupon.objects.get(
+                    id=self.coupon_id
+                )
+            except Coupon.DoesNotExist:
+                return None
+
+        return None
+
+    def get_discount(self):
+        """
+        Calculate the actual discount amount.
+        """
+        if self.coupon:
+            return (
+                Decimal(self.coupon.discount)
+                / Decimal('100')
+            ) * self.get_total_price()
+
+        return Decimal('0')
+
+    def get_total_price_after_discount(self):
+        """
+        Calculate the total price after
+        applying the coupon discount.
+        """
+        return (
+            self.get_total_price()
+            - self.get_discount()
+        )
+
     def clear(self):
         """
         Remove the cart from the session.
         """
         del self.session[settings.CART_SESSION_ID]
+
         self.save()
